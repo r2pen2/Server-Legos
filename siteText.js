@@ -1,19 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { initializeApp, cert } = require('firebase-admin/app');
-const { getFirestore, } = require('firebase-admin/firestore');
-const serviceAccount = require('../../config/serviceAccountKey.json');
+
+const db = require('../../firebase.js');
 
 /** Site text by ID, initialized to an empty dictionary */
 let siteTextData = {}
-
-// Get text from firebase and start listening
-// Init firebase
-initializeApp({
-  credential: cert(serviceAccount)
-});
-/** Firestore DB instance */
-const db = getFirestore();
 
 // On launch, fetch testimonial, offering, and staff data from Firebase
 const siteTextCollectionRef = db.collection("siteText");
