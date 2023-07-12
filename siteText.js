@@ -35,4 +35,11 @@ router.get('/' , (req, res) => {
   }
 });
 
+router.post("/", (req, res) => {
+  const firestoreId = req.body.id;
+  const newText = req.body.newText;
+  const siteTextDocumentRef = db.doc(`siteText/${firestoreId}`);
+  siteTextDocumentRef.set({text: newText});
+})
+
 module.exports = router;
