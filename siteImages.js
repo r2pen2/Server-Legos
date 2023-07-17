@@ -32,7 +32,7 @@ router.get('/' , (req, res) => {
 
 router.post("/", (req, res) => {
   const newSource = "images/" + req.body.fileName
-  const targetPath = __dirname + "../../images/" + req.body.fileName;
+  const targetPath = __dirname + "/" + req.body.fileName;
   fs.writeFile(targetPath, req.files.file.data, (err) => {
     console.log("Writing file...")
     if (err) {
