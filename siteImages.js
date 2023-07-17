@@ -41,14 +41,13 @@ router.post("/", (req, res) => {
       const firestoreId = req.body.firestoreId;
       const siteImageDocumentRef = db.doc(`siteImages/${firestoreId}`);
       siteImageDocumentRef.set({source: newSource, fileName: req.body.fileName}).then(() => {
-        
+        res.sendStatus(200);
         const deletePath = __dirname + "../../../images/" + req.body.oldFileName;
         fs.rm(deletePath, (err) => {
           if (err) {
             console.log(err);
           }
         })
-        res.sendStatus(200);
       });
     }
   });
