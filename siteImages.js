@@ -3,9 +3,12 @@ const router = express.Router();
 const fs = require('fs');
 
 const db = require('../../firebase.js');
+const fileUpload = require('express-fileupload');
 
 /** Site images by ID, initialized to an empty dictionary */
 let siteImagesData = {}
+
+router.use(fileUpload())
 
 // On launch, fetch testimonial, offering, and staff data from Firebase
 const siteTextCollectionRef = db.collection("siteImages");
