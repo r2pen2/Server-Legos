@@ -32,7 +32,7 @@ router.get('/' , (req, res) => {
 
 router.post("/", (req, res) => {
   const newSource = "images/" + req.body.fileName
-  const targetPath = __dirname + "/" + req.body.fileName;
+  const targetPath = __dirname + "/../../" + req.body.fileName;
   fs.writeFile(targetPath, req.files.file.data, (err) => {
     console.log("Writing file...")
     if (err) {
@@ -45,7 +45,7 @@ router.post("/", (req, res) => {
       const siteImageDocumentRef = db.doc(`siteImages/${firestoreId}`);
       siteImageDocumentRef.set({source: newSource, fileName: req.body.fileName}).then(() => {
         res.sendStatus(200);
-        const deletePath = __dirname + "../../images/" + req.body.oldFileName;
+        const deletePath = __dirname + "/../../images/" + req.body.oldFileName;
         fs.rm(deletePath, (err) => {
           if (err) {
             console.log(err);
