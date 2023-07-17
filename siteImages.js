@@ -46,11 +46,9 @@ router.post("/", (req, res) => {
         fs.rm(deletePath, (err) => {
           if (err) {
             console.log(err);
-            res.sendStatus(500);
-          } else {
-            res.sendStatus(200);
           }
         })
+        res.sendStatus(200);
       });
     }
   });
