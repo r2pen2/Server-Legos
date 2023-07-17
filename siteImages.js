@@ -34,10 +34,13 @@ router.post("/", (req, res) => {
   const newSource = "images/" + req.body.fileName
   const targetPath = __dirname + "../../images/" + req.body.fileName;
   fs.writeFile(targetPath, req.files.file.data, (err) => {
+    console.log("Writing file...")
     if (err) {
+      console.log("Oh god...")
       console.log(err);
       res.sendStatus(500)
     } else {
+      console.log("O!")
       const firestoreId = req.body.firestoreId;
       const siteImageDocumentRef = db.doc(`siteImages/${firestoreId}`);
       siteImageDocumentRef.set({source: newSource, fileName: req.body.fileName}).then(() => {
