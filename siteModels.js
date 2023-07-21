@@ -17,7 +17,6 @@ router.get('/' , async (req, res) => {
     let sendList = [];
     const snapshot = await db.collection(req.query.collection).get();
     snapshot.forEach((doc) => {
-      console.log(doc)
       const dataWithId = doc.data();
       dataWithId.id = doc.id;
       sendList.push(dataWithId);
@@ -39,10 +38,24 @@ router.get('/' , async (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  const docRef = db.doc(`${req.body.collection}/${req.body.documentId}`);
-  docRef.set(req.body.documentData).then(() => {
-    res.sendStatus(200);
-  });
+  if (req.body.action) {
+    if (req.body.action === "delete") {
+      const docRef = db.doc(`${req.body.collection}/${req.body.documentId}`);
+      docRef.delete().then(() => {
+        res.sendStatus(200);
+      })
+    }
+    if (req.body.action === "create") {
+      db.collection(req.body.collection).add(req.body.documentData).then(() => {
+        res.sendStatus(200);
+      })
+    }
+  } else {
+    const docRef = db.doc(`${req.body.collection}/${req.body.documentId}`);
+    docRef.set(req.body.documentData).then(() => {
+      res.sendStatus(200);
+    });
+  }
 })
 
 module.exports = router;

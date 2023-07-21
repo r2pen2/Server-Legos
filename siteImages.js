@@ -10,7 +10,6 @@ let siteImagesData = {}
 
 router.use(fileUpload())
 
-// On launch, fetch testimonial, offering, and staff data from Firebase
 const siteTextCollectionRef = db.collection("siteImages");
 siteTextCollectionRef.onSnapshot((data) => {
   console.log("Found updated siteImages data");
