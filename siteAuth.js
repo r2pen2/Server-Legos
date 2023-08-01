@@ -34,6 +34,7 @@ router.post("/", (req, res) => {
   const permissions = req.body.permissions;
   const docRef = db.doc(`users/${req.body.userId}`);
   const newUserData = {};
+  newUserData.displayName = req.body.displayName;
   for (const permission of Object.values(permissions)) {
     newUserData[permission] = false;
   }
