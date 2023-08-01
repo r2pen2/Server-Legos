@@ -37,9 +37,16 @@ router.post("/", (req, res) => {
   for (const permission of Object.values(permissions)) {
     newUserData[permission] = false;
   }
-  docRef.set(newUserData).then(() => {
-    res.sendStatus(200);
-  });
+  
+  docRef.get().then(snap => {
+    if (snap.exists) {
+      res.sendStatus(200);
+    } else {
+      docRef.set(newUserData).then(() => {
+        res.sendStatus(200);
+      });
+    }
+  })
 })
 
 module.exports = router;
