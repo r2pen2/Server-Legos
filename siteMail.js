@@ -1,15 +1,35 @@
 const express = require('express');
 const router = express.Router();
 
-const defaultMaxUpload = 5000;
+const nodemailer = require('nodemailer');
 
-router.get("/", (req, res) => {
-  res.send("<p>Specify a rule. (max-upload)</p>")
+router.post("/", (req, res) => {
+  
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: req.body.fromAddress,
+      pass: req.body.fromPassword
+    }
+  });
+  
+  var mailOptions = {
+    from: req.body.fromAddress,
+    to: req.body.toAddress,
+    subject: req.body.subject,
+    text: req.body.text
+  };
+
+  console.log(transporter);
+
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+
 })
-
-router.get('/max-upload' , (req, res) => {
-  const maxUpload = defaultMaxUpload;
-  res.json({maxUpload: maxUpload});
-});
 
 module.exports = router;
