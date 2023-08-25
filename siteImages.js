@@ -3,12 +3,9 @@ const router = express.Router();
 const fs = require('fs');
 
 const db = require('../../firebase.js');
-const fileUpload = require('express-fileupload');
 
 /** Site images by ID, initialized to an empty dictionary */
 let siteImagesData = {}
-
-router.use(fileUpload())
 
 const siteTextCollectionRef = db.collection("siteImages");
 siteTextCollectionRef.onSnapshot((data) => {
@@ -30,6 +27,7 @@ router.get('/' , (req, res) => {
 });
 
 router.post("/", (req, res) => {
+  console.log(req)
   const newSource = "images/" + req.body.fileName
   const targetPath = __dirname + "/../../images/" + req.body.fileName;
   fs.writeFile(targetPath, req.files.file.data, (err) => {
