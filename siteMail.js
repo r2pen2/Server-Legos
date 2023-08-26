@@ -4,7 +4,6 @@ const router = express.Router();
 const nodemailer = require('nodemailer');
 
 router.post("/", (req, res) => {
-  
   var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -12,16 +11,12 @@ router.post("/", (req, res) => {
       pass: req.body.fromPassword
     }
   });
-  
   var mailOptions = {
     from: req.body.fromAddress,
     to: req.body.toAddress,
     subject: req.body.subject,
     text: req.body.text
   };
-
-  console.log(transporter);
-
   transporter.sendMail(mailOptions, function(error, info){
     if (error) {
       console.log(error);
@@ -29,7 +24,6 @@ router.post("/", (req, res) => {
       console.log('Email sent: ' + info.response);
     }
   });
-
 })
 
 module.exports = router;
