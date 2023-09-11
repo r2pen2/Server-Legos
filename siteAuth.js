@@ -50,30 +50,61 @@ class SiteAuthenticationManager {
     });
 
     this.router.post("/", (req, res) => {
-      const permissions = req.body.permissions;
-      const adminPermissions = req.body.adminPermissions;
-      const docRef = db.doc(`users/${req.body.userId}`);
-      const newUserData = {};
-      newUserData.displayName = req.body.displayName;
-      newUserData.email = req.body.email;
-      newUserData.permissions = {};
-      newUserData.adminPermissions = {};
-      for (const permission of Object.values(permissions)) {
-        newUserData.permissions[permission] = false;
-      }
-      for (const admminPermission of Object.values(adminPermissions)) {
-        newUserData.adminPermissions[admminPermission] = true;
-      }
-      
-      docRef.get().then(snap => {
-        if (snap.exists) {
-          res.sendStatus(200);
+
+      if (req.body.key) {
+        // This is coming from the admin portal
+        const key = req.body.key;
+
+        if (key !== this.userKey || !this.userKey) {
+          res.send(400)
         } else {
-          docRef.set(newUserData).then(() => {
-            res.sendStatus(200);
-          });
+          const email = req.body.email;
+          const field = req.body.field;
+          const value = req.body.value;
+          res.sendStatus(200);
+          let userId = null;
+          for (const k of Object.keys(permissions)) {
+            if (permissions[k].email === email) {
+              userId = k;
+            }
+          }
+          const docRef = db.doc(`users/${userId}`);
+          docRef.get().then(docSnap => {
+            docSnap.data().then(data => {
+              const newUserData = data;
+              newUserData[field] = value;
+              docRef.set(newUserData).then(() => {
+                res.sendStatus(200);
+              });
+            })
+          })
         }
-      })
+      } else {
+        const permissions = req.body.permissions;
+        const adminPermissions = req.body.adminPermissions;
+        const docRef = db.doc(`users/${req.body.userId}`);
+        const newUserData = {};
+        newUserData.displayName = req.body.displayName;
+        newUserData.email = req.body.email;
+        newUserData.permissions = {};
+        newUserData.adminPermissions = {};
+        for (const permission of Object.values(permissions)) {
+          newUserData.permissions[permission] = false;
+        }
+        for (const admminPermission of Object.values(adminPermissions)) {
+          newUserData.adminPermissions[admminPermission] = true;
+        }
+        
+        docRef.get().then(snap => {
+          if (snap.exists) {
+            res.sendStatus(200);
+          } else {
+            docRef.set(newUserData).then(() => {
+              res.sendStatus(200);
+            });
+          }
+        })
+      }
     })
   }
 
