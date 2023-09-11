@@ -72,7 +72,7 @@ class SiteAuthenticationManager {
           docRef.get().then(docSnap => {
             const newUserData = docSnap.data();
             console.log(newUserData)
-            newUserData[field] = value;
+            newUserData.permissions[field] = value;
             docRef.set(newUserData).then(() => {
               res.sendStatus(200);
             });
