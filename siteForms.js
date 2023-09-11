@@ -25,16 +25,10 @@ router.post("/", (req, res) => {
         res.sendStatus(200);
       })
     }
-    if (req.body.action === "create") {
-      db.collection("siteForms").add(req.body.documentData).then(() => {
-        res.sendStatus(200);
-      })
-    }
   } else {
-    const docRef = db.doc(`${"siteForms"}/${req.body.documentId}`);
-    docRef.set(req.body.documentData).then(() => {
+    db.collection("siteForms").add(req.body.documentData).then(() => {
       res.sendStatus(200);
-    });
+    })
   }
 })
 
