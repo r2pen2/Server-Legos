@@ -26,13 +26,13 @@ class SiteAuthenticationManager {
     this.router = express.Router();
 
     this.router.get('/' , (req, res) => {
-      const key = sitePermissionsData[req.query.key];
+      const key = req.query.key;
+      console.log(key)
       if (key) {
-        const key = req.query.key;
         if (key !== this.userKey || !this.userKey) {
           res.send(400)
         } else {
-          res.json(siteFormsData);
+          res.json(sitePermissionsData);
         }
       } else {
         const user = sitePermissionsData[req.query.id];
