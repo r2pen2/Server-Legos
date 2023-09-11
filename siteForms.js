@@ -26,7 +26,7 @@ class SiteFormManager {
     this.router = express.Router();
     this.router.get('/' , (req, res) => {
       const key = req.query.key;
-      if (key !== this.formKey) {
+      if (key !== this.formKey || !this.formKey) {
         res.send(400)
       } else {
         res.json(siteFormsData);
