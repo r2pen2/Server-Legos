@@ -71,6 +71,7 @@ class SiteAuthenticationManager {
           const docRef = db.doc(`users/${userId}`);
           docRef.get().then(docSnap => {
             const newUserData = docSnap.data();
+            console.log(newUserData)
             newUserData[field] = value;
             docRef.set(newUserData).then(() => {
               res.sendStatus(200);
