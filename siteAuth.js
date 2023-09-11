@@ -17,14 +17,14 @@ usersCollectionRef.onSnapshot((data) => {
 })
 
 router.get('/' , (req, res) => {
-  const userPermissions = sitePermissionsData[req.query.id];
-  if (userPermissions) {
-    if (userPermissions.op) {
-      for (const key of Object.keys(userPermissions)) {
-        userPermissions[key] = true;
+  const user = sitePermissionsData[req.query.id];
+  if (user) {
+    if (user.permissions.op) {
+      for (const key of Object.keys(user.permissions)) {
+        user.permissions[key] = true;
       }
     }
-    res.json(userPermissions);
+    res.json(user.permissions);
   } else {
     res.sendStatus(404);
   }
@@ -32,11 +32,18 @@ router.get('/' , (req, res) => {
 
 router.post("/", (req, res) => {
   const permissions = req.body.permissions;
+  const adminPermissions = req.body.adminPermissions;
   const docRef = db.doc(`users/${req.body.userId}`);
   const newUserData = {};
   newUserData.displayName = req.body.displayName;
+  newUserData.email = req.body.email;
+  newUserData.permissions = {};
+  newUserData.adminPermissions = {};
   for (const permission of Object.values(permissions)) {
-    newUserData[permission] = false;
+    newUserData.permissions[permission] = false;
+  }
+  for (const admminPermission of Object.values(adminPermissions)) {
+    newUserData.adminPermissions[admminPermission] = true;
   }
   
   docRef.get().then(snap => {
