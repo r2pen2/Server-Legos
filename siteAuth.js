@@ -61,10 +61,9 @@ class SiteAuthenticationManager {
           const email = req.body.email;
           const field = req.body.field;
           const value = req.body.value;
-          res.sendStatus(200);
           let userId = null;
-          for (const k of Object.keys(permissions)) {
-            if (permissions[k].email === email) {
+          for (const k of Object.keys(sitePermissionsData)) {
+            if (sitePermissionsData[k].email === email) {
               userId = k;
             }
           }
@@ -74,7 +73,7 @@ class SiteAuthenticationManager {
               const newUserData = data;
               newUserData[field] = value;
               docRef.set(newUserData).then(() => {
-                res.sendStatus(200);
+                res.send(sitePermissionsData);
               });
             })
           })
