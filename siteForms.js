@@ -28,7 +28,7 @@ class SiteFormManager {
     this.router.get('/' , (req, res) => {
       const key = req.query.key;
       console.log(key)
-      if (key !== this.formKey) {
+      if (key !== this.formKey || !this.formKey) {
         console.log("Invalid form key received.")
         res.send(400)
       } else {
