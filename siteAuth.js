@@ -67,6 +67,7 @@ class SiteAuthenticationManager {
               userId = k;
             }
           }
+          console.log(userId)
           const docRef = db.doc(`users/${userId}`);
           docRef.get().then(docSnap => {
             docSnap.data().then(data => {
