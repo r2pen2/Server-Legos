@@ -73,7 +73,7 @@ class SiteAuthenticationManager {
               const newUserData = data;
               newUserData[field] = value;
               docRef.set(newUserData).then(() => {
-                res.json(sitePermissionsData);
+                res.sendStatus(200);
               });
             })
           })
