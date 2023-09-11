@@ -1,5 +1,4 @@
 const express = require('express');
-const router = express.Router();
 
 const db = require('../../firebase.js');
 
@@ -16,45 +15,72 @@ usersCollectionRef.onSnapshot((data) => {
   }
 })
 
-router.get('/' , (req, res) => {
-  const user = sitePermissionsData[req.query.id];
-  if (user) {
-    if (user.permissions.op) {
-      for (const key of Object.keys(user.permissions)) {
-        user.permissions[key] = true;
+class SiteAuthenticationManager {
+
+  constructor(userKey) {
+    this.userKey = userKey;
+  }
+
+  initialize() {
+    console.log("Creating new SiteAuthenticationManager with user key: " + this.userKey)
+    this.router = express.Router();
+
+    this.router.get('/' , (req, res) => {
+      const key = sitePermissionsData[req.query.key];
+      if (key) {
+        const key = req.query.key;
+        if (key !== this.userKey || !this.userKey) {
+          res.send(400)
+        } else {
+          res.json(siteFormsData);
+        }
+      } else {
+        const user = sitePermissionsData[req.query.id];
+        if (user) {
+          if (user.permissions.op) {
+            for (const key of Object.keys(user.permissions)) {
+              user.permissions[key] = true;
+            }
+          }
+          res.json(user.permissions);
+        } else {
+          res.sendStatus(404);
+        }
       }
-    }
-    res.json(user.permissions);
-  } else {
-    res.sendStatus(404);
-  }
-});
+    });
 
-router.post("/", (req, res) => {
-  const permissions = req.body.permissions;
-  const adminPermissions = req.body.adminPermissions;
-  const docRef = db.doc(`users/${req.body.userId}`);
-  const newUserData = {};
-  newUserData.displayName = req.body.displayName;
-  newUserData.email = req.body.email;
-  newUserData.permissions = {};
-  newUserData.adminPermissions = {};
-  for (const permission of Object.values(permissions)) {
-    newUserData.permissions[permission] = false;
+    this.router.post("/", (req, res) => {
+      const permissions = req.body.permissions;
+      const adminPermissions = req.body.adminPermissions;
+      const docRef = db.doc(`users/${req.body.userId}`);
+      const newUserData = {};
+      newUserData.displayName = req.body.displayName;
+      newUserData.email = req.body.email;
+      newUserData.permissions = {};
+      newUserData.adminPermissions = {};
+      for (const permission of Object.values(permissions)) {
+        newUserData.permissions[permission] = false;
+      }
+      for (const admminPermission of Object.values(adminPermissions)) {
+        newUserData.adminPermissions[admminPermission] = true;
+      }
+      
+      docRef.get().then(snap => {
+        if (snap.exists) {
+          res.sendStatus(200);
+        } else {
+          docRef.set(newUserData).then(() => {
+            res.sendStatus(200);
+          });
+        }
+      })
+    })
   }
-  for (const admminPermission of Object.values(adminPermissions)) {
-    newUserData.adminPermissions[admminPermission] = true;
-  }
-  
-  docRef.get().then(snap => {
-    if (snap.exists) {
-      res.sendStatus(200);
-    } else {
-      docRef.set(newUserData).then(() => {
-        res.sendStatus(200);
-      });
-    }
-  })
-})
 
-module.exports = router;
+  getRouter() {
+    this.initialize();
+    return this.router;
+  }
+}
+
+module.exports = SiteAuthenticationManager;
