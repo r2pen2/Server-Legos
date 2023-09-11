@@ -70,13 +70,11 @@ class SiteAuthenticationManager {
           console.log(userId)
           const docRef = db.doc(`users/${userId}`);
           docRef.get().then(docSnap => {
-            docSnap.data().then(data => {
-              const newUserData = data;
-              newUserData[field] = value;
-              docRef.set(newUserData).then(() => {
-                res.sendStatus(200);
-              });
-            })
+            const newUserData = docSnap.data();
+            newUserData[field] = value;
+            docRef.set(newUserData).then(() => {
+              res.sendStatus(200);
+            });
           })
         }
       } else {
