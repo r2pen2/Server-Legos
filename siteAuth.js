@@ -61,18 +61,21 @@ class SiteAuthenticationManager {
           const email = req.body.email;
           const field = req.body.field;
           const value = req.body.value;
+          const isAdmin = req.body.isAdmin;
           let userId = null;
           for (const k of Object.keys(sitePermissionsData)) {
             if (sitePermissionsData[k].email === email) {
               userId = k;
             }
           }
-          console.log(userId)
           const docRef = db.doc(`users/${userId}`);
           docRef.get().then(docSnap => {
             const newUserData = docSnap.data();
-            console.log(newUserData)
-            newUserData.permissions[field] = value;
+            if (isAdmin) {
+              newUserData.adminPermissions[field] = value;
+            } else {
+              newUserData.permissions[field] = value;
+            }
             docRef.set(newUserData).then(() => {
               res.sendStatus(200);
             });
