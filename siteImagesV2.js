@@ -39,7 +39,7 @@ class SiteImageManager {
     
     this.router.post("/", (req, res) => {
       const newSource = "images/" + req.body.fileName
-      const targetPath = __dirname + "/../../images/" + req.body.fileName;
+      const targetPath = __dirname + "/../../static/images/" + req.body.fileName;
       fs.writeFile(targetPath, req.files.file.data, (err) => {
         if (err) {
           console.log(err);
@@ -49,7 +49,7 @@ class SiteImageManager {
           const siteImageDocumentRef = db.doc(`siteImages-${this.siteKey}/${firestoreId}`);
           siteImageDocumentRef.set({source: newSource, fileName: req.body.fileName}).then(() => {
             res.sendStatus(200);
-            const deletePath = __dirname + "/../../images/" + req.body.oldFileName;
+            const deletePath = __dirname + "/../../static/images/" + req.body.oldFileName;
             fs.rm(deletePath, (err) => {
               if (err) {
                 console.log(err);
