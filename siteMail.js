@@ -21,7 +21,7 @@ class SiteMailManager {
         }
       });
       var mailOptions = {
-        from: this.email,
+        from: `joed.dev Forms <forms@joed.dev>`,
         to: req.body.toAddress,
         subject: req.body.subject,
         text: req.body.text
