@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../../firebase.js');
 const fs = require('fs');
+const { pathToFileURL } = require('url');
 
 /** Site text by ID, initialized to an empty dictionary */
 let siteImagesData = {}
@@ -36,6 +37,8 @@ class SiteImageManager {
         res.sendStatus(404);
       }
     });
+
+    console.log(__dirname + "/../../static/images/")
     
     this.router.post("/", (req, res) => {
       const newSource = "images/" + req.body.fileName
