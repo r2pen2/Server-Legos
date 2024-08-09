@@ -1,7 +1,6 @@
 const express = require('express');
 const db = require('../../firebase.js');
 const fs = require('fs');
-const path = require('path');
 
 /** Site text by ID, initialized to an empty dictionary */
 let siteImagesData = {}
@@ -37,22 +36,20 @@ class SiteImageManager {
         res.sendStatus(404);
       }
     });
-
+    
     this.router.post("/", (req, res) => {
-      console.log("IMAGE POST")
       const newSource = "images/" + req.body.fileName
-      const targetPath = __dirname + "/../../images/" + req.body.fileName;
-      console.log(targetPath)
+      const targetPath = __dirname + "/../../static/images/" + req.body.fileName;
       fs.writeFile(targetPath, req.files.file.data, (err) => {
         if (err) {
-          console.log("WRITE ERROR:" + err);
+          console.log(err);
           res.sendStatus(500)
         } else {
           const firestoreId = req.body.firestoreId;
           const siteImageDocumentRef = db.doc(`siteImages-${this.siteKey}/${firestoreId}`);
           siteImageDocumentRef.set({source: newSource, fileName: req.body.fileName}).then(() => {
             res.sendStatus(200);
-            const deletePath = path.join(__dirname + "/../../images/" + req.body.oldFileName);
+            const deletePath = __dirname + "/../../static/images/" + req.body.oldFileName;
             fs.rm(deletePath, (err) => {
               if (err) {
                 console.log(err);
