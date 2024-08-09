@@ -45,7 +45,7 @@ class SiteImageManager {
       console.log(targetPath)
       fs.writeFile(targetPath, req.files.file.data, (err) => {
         if (err) {
-          console.log(err);
+          console.log("WRITE ERROR:" + err);
           res.sendStatus(500)
         } else {
           const firestoreId = req.body.firestoreId;
