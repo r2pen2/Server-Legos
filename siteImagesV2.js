@@ -38,11 +38,10 @@ class SiteImageManager {
       }
     });
 
-    console.log(path.join(__dirname + "/../../static/images/"))
-    
     this.router.post("/", (req, res) => {
       const newSource = "images/" + req.body.fileName
       const targetPath = path.join(__dirname + "/../../static/images/" + req.body.fileName);
+      console.log(targetPath)
       fs.writeFile(targetPath, req.files.file.data, (err) => {
         if (err) {
           console.log(err);
