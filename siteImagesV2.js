@@ -39,6 +39,7 @@ class SiteImageManager {
     });
 
     this.router.post("/", (req, res) => {
+      console.log("IMAGE POST")
       const newSource = "images/" + req.body.fileName
       const targetPath = path.join(__dirname + "/../../static/images/" + req.body.fileName);
       console.log(targetPath)
